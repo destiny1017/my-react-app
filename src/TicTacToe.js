@@ -2,21 +2,42 @@ import {useState} from 'react';
 
 function Square({value, onSquareClick}) {
 
+    const isVictory = () => {
+        if(value && value.indexOf("!") > 0) {
+            return "square victory";
+        }
+        return "square";
+    }
+
     return (
-        <button className="square"
+        <button className={isVictory()}
+                data-value={value || ""}
                 onClick={onSquareClick}>{value}</button>
     );
 }
 
-function Board({ xIsNext, squares, onPlay }) {
+function StatusBar({winner, xIsNext, move}) {
 
-    const winner = calculateWinner(squares);
-    let status;
+    let statusMessage;
+    let statusClass = "status ";
+
     if (winner) {
-        status = "Winner: " + winner;
+        statusMessage = "Winner: " + winner;
+        statusClass += "winner";
+    } else if(move === 9) {
+        statusMessage = "Draw!"
+        statusClass += "draw";
     } else {
-        status = "Next player: " + (xIsNext ? "X" : "O");
+        statusMessage = "Next player: " + (xIsNext ? "X" : "O");
+        statusClass += "next";
     }
+
+    return (
+        <div className={statusClass}>{statusMessage}</div>
+    )
+}
+
+function Board({ xIsNext, squares, onPlay }) {
 
     function handleClick(i) {
         if(squares[i] || calculateWinner(squares)) {
@@ -33,7 +54,6 @@ function Board({ xIsNext, squares, onPlay }) {
 
     return (
         <>
-            <div className="status">{status}</div>
             <div className="board-row">
                 <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
                 <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
@@ -59,6 +79,16 @@ export default function Game() {
     const [currentMove, setCurrentMove] = useState(0);
     const currentSquares = history[history.length - 1];
     let xIsNext = currentMove % 2 === 0;
+
+    const winner = calculateWinner(currentSquares);
+    const winPlayer = winner ? currentSquares[winner[0]] : null;
+
+    if (winner) {
+        let winSquare = currentSquares.slice();
+        winner.forEach((line) => winSquare[line] = winSquare[line] + "!");
+        // setHistory([history.slice(currentMove-1), winSquare]);
+        console.log(winSquare);
+    }
 
     function handlePlay(nextSquares) {
         setHistory([...history, nextSquares]);
@@ -89,6 +119,7 @@ export default function Game() {
     return (
         <div className="game">
             <div className="game-board">
+                <StatusBar winner={winPlayer} xIsNext={xIsNext} move={currentMove}/>
                 <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
             </div>
             <div className="game-info">
@@ -112,7 +143,7 @@ function calculateWinner(squares) {
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return squares[a];
+            return lines[i];
         }
     }
     return null;

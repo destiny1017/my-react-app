@@ -12,11 +12,88 @@ code {
     monospace;
 }
 
+/* 전체 게임 영역 */
+.game {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 50px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* 게임 보드 */
+.game-board {
+  margin-right: 40px;
+}
+
+/* 상태 텍스트 (Next player, Winner 등) */
+.status {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.winner {
+  color: #21ba09;
+  font-weight: bold;
+}
+
+.draw {
+  color: #ff0000;
+  font-weight: bold;
+}
+
+/* 각 행 */
 .board-row {
   display: flex;
 }
 
+/* 게임 사각형 버튼 */
 .square {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
+  background-color: #f0f0f0;
+  border: 2px solid #ccc;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.square:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.03);
+}
+
+.square:focus {
+  outline: none;
+}
+
+/* 게임 정보 (히스토리 이동) */
+.game-info {
+  font-size: 1rem;
+}
+
+.game-info button {
+  margin: 5px 0;
+  padding: 6px 12px;
+  background-color: white;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.game-info button:hover {
+  background-color: #f5f5f5;
+}
+
+.victory {
+  color: red;
 }
