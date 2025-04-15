@@ -4,6 +4,7 @@ function Square({value, onSquareClick}) {
 
     const isVictory = () => {
         if(value && value.indexOf("!") > 0) {
+            value = value.slice(0, 1);
             return "square victory";
         }
         return "square";
@@ -76,29 +77,26 @@ function Board({ xIsNext, squares, onPlay }) {
 export default function Game() {
 
     const [history, setHistory] = useState([Array(9).fill(null)]);
-    const [currentMove, setCurrentMove] = useState(0);
     const currentSquares = history[history.length - 1];
+    let currentMove = history.length - 1;
     let xIsNext = currentMove % 2 === 0;
 
     const winner = calculateWinner(currentSquares);
     const winPlayer = winner ? currentSquares[winner[0]] : null;
 
     if (winner) {
-        let winSquare = currentSquares.slice();
-        winner.forEach((line) => winSquare[line] = winSquare[line] + "!");
-        // setHistory([history.slice(currentMove-1), winSquare]);
-        console.log(winSquare);
+        winner.forEach((line) => currentSquares[line] = currentSquares[line] + "!");
     }
 
     function handlePlay(nextSquares) {
         setHistory([...history, nextSquares]);
-        setCurrentMove(history.length);
+        currentMove = history.length;
     }
 
     function jumpTo(nextMove) {
         const moveHistory = history.slice(0, nextMove+1);
         setHistory(moveHistory)
-        setCurrentMove(nextMove);
+        currentMove = nextMove;
         xIsNext = nextMove % 2 === 0;
     }
 
